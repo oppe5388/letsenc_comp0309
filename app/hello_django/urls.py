@@ -1,13 +1,22 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import RedirectView
 
-from upload.views import image_upload
+from . import settings
+from django.contrib.staticfiles.urls import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
-    path("", image_upload, name="upload"),
-    path("admin/", admin.site.urls),
+    path('admin/', admin.site.urls),
+    path('accounts/', include('accounts.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('summernote/', include('django_summernote.urls')),
+
+    path('myinfo/', include('myinfo.urls')),
+    path('', RedirectView.as_view(url='/myinfo/')),
+
 ]
 
 if bool(settings.DEBUG):
