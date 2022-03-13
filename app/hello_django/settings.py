@@ -137,10 +137,10 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-#bs4sampleで追加
-STATICFILES_DIRS =(
-    os.path.join(BASE_DIR,'static'),
-)
+# #bs4sampleで追加
+# STATICFILES_DIRS =(
+#     os.path.join(BASE_DIR,'static'),
+# )
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -184,20 +184,36 @@ SUMMERNOTE_CONFIG = {
     },
 }
 
-
+#とりあえずログ出力設定　https://is.gd/8GCTgJ
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'production': {
+            'format': '%(asctime)s [%(levelname)s] %(process)d %(thread)d '
+                      '%(pathname)s:%(lineno)d %(message)s'
+        },
+    },
     'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': 'logs/django.log',  #環境に合わせて変更
+            'formatter': 'production',
+            'level': 'INFO',
         },
     },
     'loggers': {
-        'django.db.backends': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
+        # 自作したログ出力
+        '': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        # Djangoの警告・エラー
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': False,
         },
     },
 }
@@ -209,4 +225,4 @@ MESSAGE_TAGS = {
 
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
